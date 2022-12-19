@@ -15,6 +15,7 @@ type HashFinder struct {
 	MaxSize int // size of string to hash
 	combinator combinator.State
 	Wanted string // the hash we want to match
+	Print bool
 }
 
 func (f *HashFinder) Find() {
@@ -24,7 +25,9 @@ func (f *HashFinder) Find() {
 			break
 		}
 		hash := GetHash(comb)
-		fmt.Printf("%v %v\n", comb, hash)
+		if f.Print {
+			fmt.Printf("%v %v\n", comb, hash)
+		}
 		if hash == f.Wanted {
 			fmt.Printf(">>> FOUND value '%v' for hash %v\n", comb, hash)
 			break
@@ -32,13 +35,14 @@ func (f *HashFinder) Find() {
 	}
 }
 
-func NewHashFinder(numCombs int, maxSize int, minSize int, charSet string, wanted string) HashFinder {
+func NewHashFinder(numCombs int, maxSize int, minSize int, charSet string, wanted string, print bool) HashFinder {
 	comb := combinator.NewState(charSet, minSize)
 	finder := HashFinder {
 		NumCombs: numCombs,
 		MaxSize: maxSize,
 		Wanted: wanted,
 		combinator: comb,
+		Print: print,
 	}
 	return finder
 }
@@ -69,13 +73,17 @@ func PrintHashCombs(numCombs int, maxSize int){
 }
 
 func main() {
-	numCombs := 10000000
-	maxSize := 3
+	numCombs := 10000000 * 10000000
+	maxSize := 5
 	minSize := 0
 	charSet := combinator.CharSetDefault
+	print := false
 	// a 0cc175b9c0f1b6a831c399e269772661
-	wanted := "0cc175b9c0f1b6a831c399e269772661"
+	// abc 900150983cd24fb0d6963f7d28e17f72 2s
+	// abcd e2fc714c4727ee9395f324cd2e7f331f 2:36
+	// abcde ab56b4d92b40713acc5af89985d4b786 1:40:50
+	wanted := "ab56b4d92b40713acc5af89985d4b786"
 
-	finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wanted)
+	finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wanted, print)
 	finder.Find()
 }
