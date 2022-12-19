@@ -1,6 +1,7 @@
 package hash
 import (
 	"fmt"
+	// "errors" //errors.New("No value found for hash")
 	"hashsnail/combinator"
 	"crypto/md5"
 	// "crypto/sha1"
@@ -16,7 +17,7 @@ type HashFinder struct {
 	Print bool
 }
 
-func (f *HashFinder) Find() {
+func (f *HashFinder) Find() (string, error) {
 	for i:= 0; i < f.NumCombs; i++ {
 		comb := f.combinator.Next()
 		if len(comb) > f.MaxSize {
@@ -27,10 +28,11 @@ func (f *HashFinder) Find() {
 			fmt.Printf("%v %v\n", comb, hash)
 		}
 		if hash == f.Wanted {
-			fmt.Printf(">>> FOUND value '%v' for hash %v\n", comb, hash)
+			return comb, nil
 			break
 		}
 	}
+	return "", fmt.Errorf("No value found for hash %v", f.Wanted)
 }
 
 func NewHashFinder(numCombs int, maxSize int, minSize int, charSet string, wanted string, print bool) HashFinder {
