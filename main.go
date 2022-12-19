@@ -1,6 +1,9 @@
 package main
 // go run .
 
+// comparison; <4s on M1 MacBook Air
+// $ ./hashcat -m 0 -a 3 ab56b4d92b40713acc5af89985d4b786
+
 import (
 	"hashsnail/hash"
 	"hashsnail/combinator"
