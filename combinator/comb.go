@@ -1,15 +1,15 @@
 package combinator
 
 import (
-	"strings"
 	"sort"
+	"strings"
 )
 
 const CharSetDefault = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST1234567890 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 
 type State struct {
-	indexes []int // keeps track of which characters should be returned
-	Chars []string // character set to build combinations from
+	indexes []int    // keeps track of which characters should be returned
+	Chars   []string // character set to build combinations from
 }
 
 func (s *State) Get() string {
@@ -29,15 +29,15 @@ func (s *State) Increment() {
 	s.Carry()
 }
 
-func (s *State) Carry(){
+func (s *State) Carry() {
 	// reset index values from left to right to carry the value greater than the number of characters
 	for i, val := range s.indexes {
-		if val > len(s.Chars) - 1 {
+		if val > len(s.Chars)-1 {
 			// reset the left-hand value
 			s.indexes[i] = 0
 			// if we already have a value in the next right place, increment it
-			if i < len(s.indexes) - 1 {
-				s.indexes[i + 1]++
+			if i < len(s.indexes)-1 {
+				s.indexes[i+1]++
 			} else {
 				// otherwise add a new value in the next place
 				s.indexes = append(s.indexes, 0)
@@ -59,7 +59,7 @@ func NewState(charSet string, minSize int) State {
 	chars = uniqueStrs(chars)
 	sort.Strings(chars)
 	state := State{
-		Chars: chars,
+		Chars:   chars,
 		indexes: []int{0},
 	}
 	for len(state.indexes) < minSize {
@@ -69,22 +69,22 @@ func NewState(charSet string, minSize int) State {
 }
 
 func uniqueStrs(strSlice []string) []string {
-    keys := make(map[string]bool)
-    list := []string{}
-    for _, entry := range strSlice {
-        if _, value := keys[entry]; !value {
-            keys[entry] = true
-            list = append(list, entry)
-        }
-    }
-    return list
+	keys := make(map[string]bool)
+	list := []string{}
+	for _, entry := range strSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
 }
 
 func GetCombs(charSet string, numCombs int, minSize int) []string {
 	// return a list of all combinations up to a specific amount
 	combs := []string{}
 	state := NewState(charSet, minSize)
-	for i:= 0; i < numCombs; i++ {
+	for i := 0; i < numCombs; i++ {
 		comb := state.Next()
 		combs = append(combs, comb)
 	}

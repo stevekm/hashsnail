@@ -2,15 +2,15 @@ package combinator
 
 import (
 	// "fmt" // fmt.Printf("%v %v\n", want, got)
-	"testing"
 	"github.com/google/go-cmp/cmp"
+	"testing"
 )
 
 func TestCombinator(t *testing.T) {
 	t.Run("test_combinator1", func(t *testing.T) {
 		state := NewState("abc", 0)
 		got := []string{}
-		for i:= 0; i < 25; i++ {
+		for i := 0; i < 25; i++ {
 			comb := state.Next()
 			got = append(got, comb)
 		}

@@ -1,4 +1,5 @@
 package main
+
 // $ go run . 0cc175b9c0f1b6a831c399e269772661
 // $ go run . e2fc714c4727ee9395f324cd2e7f331f --max-size 2 --progress
 
@@ -7,17 +8,17 @@ package main
 
 import (
 	"fmt"
-	"log"
-	_hash "hashsnail/hash"
-	"hashsnail/combinator"
 	"github.com/alecthomas/kong"
+	"hashsnail/combinator"
+	_hash "hashsnail/hash"
+	"log"
 )
 
 type CLI struct {
-	Hash string `help:"hash string to crack" arg:""` // required positional arg
-	MaxSize int `help:"max length of password to search for" default:3`
-	MinSize int `help:"min length of password to search for" default:0`
-	Progress bool `help:"print hasing progress to console"` // false by default
+	Hash     string `help:"hash string to crack" arg:""` // required positional arg
+	MaxSize  int    `help:"max length of password to search for" default:3`
+	MinSize  int    `help:"min length of password to search for" default:0`
+	Progress bool   `help:"print hasing progress to console"` // false by default
 }
 
 func (cli *CLI) Run() error {
@@ -46,9 +47,9 @@ func run(
 	finder := _hash.NewHashFinder(numCombs, maxSize, minSize, charSet, wanted, print)
 	result, err := finder.Find()
 	if err != nil {
-        log.Fatalf("%v", err)
-        return err
-    }
+		log.Fatalf("%v", err)
+		return err
+	}
 	fmt.Printf(">>> FOUND value '%v' for hash %v\n", result, wanted)
 
 	return nil
