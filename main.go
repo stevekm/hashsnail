@@ -1,12 +1,14 @@
 package main
+// go run .
 
 import (
 	"fmt"
 	"strings"
+	"hashsnail/combinator"
 )
 
 func main() {
-	state := NewState()
+	state := combinator.NewState()
 
 	for i:= 0; i < 5000; i++ {
 		comb := state.Next()
