@@ -1,11 +1,5 @@
 package main
 
-// $ go run . 0cc175b9c0f1b6a831c399e269772661
-// $ go run . e2fc714c4727ee9395f324cd2e7f331f --max-size 2 --progress
-
-// comparison; <4s on M1 MacBook Air
-// $ ./hashcat -m 0 -a 3 ab56b4d92b40713acc5af89985d4b786
-
 import (
 	"fmt"
 	"github.com/alecthomas/kong"
