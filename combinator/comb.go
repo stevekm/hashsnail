@@ -2,7 +2,10 @@ package combinator
 
 import (
 	"strings"
+	"sort"
 )
+
+const CharSetDefault = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST1234567890`~!@#$%^&*()_+-=[]|;':,./<>?\"\\"
 
 type State struct {
 	indexes []int // keeps track of which characters should be returned
@@ -50,12 +53,40 @@ func (s *State) Next() string {
 	return result
 }
 
-func NewState() State {
+func NewState(charSet string, minSize int) State {
 	// return a new blank state
-	chars := strings.Split("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST1234567890", "")
+	chars := strings.Split(charSet, "")
+	chars = uniqueStrs(chars)
+	sort.Strings(chars)
 	state := State{
 		Chars: chars,
 		indexes: []int{0},
 	}
+	for len(state.indexes) < minSize {
+		state.indexes = append(state.indexes, 0)
+	}
 	return state
+}
+
+func uniqueStrs(strSlice []string) []string {
+    keys := make(map[string]bool)
+    list := []string{}
+    for _, entry := range strSlice {
+        if _, value := keys[entry]; !value {
+            keys[entry] = true
+            list = append(list, entry)
+        }
+    }
+    return list
+}
+
+func GetCombs(charSet string, numCombs int, minSize int) []string {
+	// return a list of all combinations up to a specific amount
+	combs := []string{}
+	state := NewState(charSet, minSize)
+	for i:= 0; i < numCombs; i++ {
+		comb := state.Next()
+		combs = append(combs, comb)
+	}
+	return combs
 }
