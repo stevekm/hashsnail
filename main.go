@@ -3,15 +3,14 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"hashsnail/combinator"
 )
 
 func main() {
 	state := combinator.NewState()
 
-	for i:= 0; i < 5000; i++ {
+	for i:= 0; i < 500 * 1000 * 1000; i++ {
 		comb := state.Next()
-		fmt.Printf("%v\t%v\n", strings.Join(comb, ""), state.Indexes)
+		fmt.Printf("%v\n", comb)
 	}
 }
