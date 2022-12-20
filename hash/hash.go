@@ -28,6 +28,14 @@ type HashFinder struct {
 	NumWorkers int
 }
 
+func (f *HashFinder) IsMaxSize(comb string) bool {
+	if f.MaxSize < 0 {
+		return false
+	} else {
+		return len(comb) > f.MaxSize
+	}
+}
+
 func (f *HashFinder) Find() (string, error) {
 	// find the string combination that matches the wanted hash
 	for i := 0; i < f.NumCombs; i++ {
@@ -51,7 +59,7 @@ func (f *HashFinder) Find() (string, error) {
 
 func (f *HashFinder) FindParallel() (string, error) {
 	numWorkers := f.NumWorkers
-	runtime.GOMAXPROCS(numWorkers) // runtime.NumCPU()
+	runtime.GOMAXPROCS(numWorkers + 1)
 
 	work := make(chan string) // send comb's in here
 	results := make(chan HashResult) // send hash result back out here
@@ -114,7 +122,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 					// get the next combination
 					comb := f.combinator.Next()
 					// stop sending work if we have exceeded the max size
-					if len(comb) > f.MaxSize {
+					if f.IsMaxSize(comb) {
 						cancel()
 						continue
 					} else {
@@ -127,23 +135,23 @@ func (f *HashFinder) FindParallel() (string, error) {
 			// only run until we hit max NumCombs value
 			combinatorNumCombs:
 			for i := 0; i < f.NumCombs; i++ {
-			select {
-			case <-ctx.Done(): // if cancel() is executed, stop sending more work
-				// exit the combinator loop
-				break combinatorNumCombs
-			default:
-				// get the next combination
-				comb := f.combinator.Next()
-				// stop sending work if we have exceeded the max size
-				if len(comb) > f.MaxSize {
-					cancel()
-					continue
-				} else {
-					// send the combination to the worker
-					work <- comb
+				select {
+				case <-ctx.Done(): // if cancel() is executed, stop sending more work
+					// exit the combinator loop
+					break combinatorNumCombs
+				default:
+					// get the next combination
+					comb := f.combinator.Next()
+					// stop sending work if we have exceeded the max size
+					if f.IsMaxSize(comb) {
+						cancel()
+						continue
+					} else {
+						// send the combination to the worker
+						work <- comb
+					}
 				}
 			}
-		}
 
 		// close the work channel after all the work has been sent
 		// wait for the workers to finish
