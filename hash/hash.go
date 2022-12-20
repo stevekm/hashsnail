@@ -53,10 +53,12 @@ func (f *HashFinder) FindParallel() (string, error) {
 	runtime.GOMAXPROCS(numWorkers) // runtime.NumCPU()
 
 	work := make(chan string) // send comb's in here
-	results := make(chan HashResult) // send hash results back out here
-	ctx, cancel := context.WithCancel(context.Background()) // signal to stop sending work
+	results := make(chan HashResult) // send hash result back out here
 
-	// create worker goroutines
+	// signal to stop sending work to the hash checkers
+	ctx, cancel := context.WithCancel(context.Background())
+
+	// create hash checker worker goroutines
 	wg := sync.WaitGroup{}
 	for i := 0; i < numWorkers; i++ {
 		// add a worker
@@ -77,7 +79,6 @@ func (f *HashFinder) FindParallel() (string, error) {
 						Hash: hash,
 						Result: comb,
 					}
-					// fmt.Printf("worker found a result: %v %v\n", result.Result, result.Hash)
 					// send the correct result to the output channel
 					results <- result
 					// stop sending work
@@ -97,37 +98,27 @@ func (f *HashFinder) FindParallel() (string, error) {
 	// once all workers are busy
 	go func(ctx context.Context) {
 		// send all string combinations to the hash workers
-		// fmt.Println("starting combinator")
 		combinator:
 		for i := 0; i < f.NumCombs; i++ {
 			select {
-			case <-ctx.Done(): // if cancel() execute, stop sending more work
-				// fmt.Println("combinator got cancel() signal")
-				// close the work channel and exit
-				// close(work)
-				// return
+			case <-ctx.Done(): // if cancel() is executed, stop sending more work
+				// exit the combinator loop
 				break combinator
 			default:
 				// get the next combination
 				comb := f.combinator.Next()
 				// stop sending work if we have exceeded the max size
 				if len(comb) > f.MaxSize {
-					// fmt.Println("combinator max size exceeded")
 					cancel()
-					// close(work)
-					// return
-					// break
 					continue
 				} else {
 					// send the combination to the worker
-					// fmt.Printf("sending comb:%v\n", comb)
 					work <- comb
 				}
 			}
 		}
-		// fmt.Println("done all combinations")
 
-		// close the work channel after all the work has been send
+		// close the work channel after all the work has been sent
 		// wait for the workers to finish
 		// then close the results channel
 		// NOTE: this should only trigger if no hash results were found!
