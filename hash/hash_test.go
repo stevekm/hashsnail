@@ -13,7 +13,8 @@ func TestHash(t *testing.T) {
 		charSet := "abcdefg"
 		wantedHash := "900150983cd24fb0d6963f7d28e17f72"
 		print := false
-		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print)
+		numThreads := 2
+		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print, numThreads)
 		got, _ := finder.Find()
 		want := "abc"
 		if diff := cmp.Diff(want, got); diff != "" {
@@ -29,7 +30,8 @@ func TestHash(t *testing.T) {
 		charSet := "abcd"
 		wantedHash := "4a8a08f09d37b73795649038408b5f33"
 		print := false
-		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print)
+		numThreads := 2
+		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print, numThreads)
 		got, _ := finder.FindParallel()
 		want := "c"
 		if diff := cmp.Diff(want, got); diff != "" {
@@ -45,7 +47,8 @@ func TestHash(t *testing.T) {
 		charSet := "abc"
 		wantedHash := "26ca5bfe74f8de88ccaac5c0f44b349d"
 		print := false
-		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print)
+		numThreads := 2
+		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print, numThreads)
 		got, _ := finder.FindParallel() // TODO: check the error instead!
 		want := "" // "abcc"
 		if diff := cmp.Diff(want, got); diff != "" {
@@ -61,7 +64,8 @@ func TestHash(t *testing.T) {
 		charSet := "def"
 		wantedHash := "4a8a08f09d37b73795649038408b5f33"
 		print := false
-		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print)
+		numThreads := 2
+		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print, numThreads)
 		got, _ := finder.FindParallel() // TODO: check the error instead!
 		want := "" // "c"
 		if diff := cmp.Diff(want, got); diff != "" {

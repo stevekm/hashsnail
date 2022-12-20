@@ -25,6 +25,7 @@ type HashFinder struct {
 	combinator combinator.State
 	Wanted     string // the hash we want to match
 	Print      bool
+	NumWorkers int
 }
 
 func (f *HashFinder) Find() (string, error) {
@@ -49,7 +50,7 @@ func (f *HashFinder) Find() (string, error) {
 
 
 func (f *HashFinder) FindParallel() (string, error) {
-	numWorkers := 2
+	numWorkers := f.NumWorkers
 	runtime.GOMAXPROCS(numWorkers) // runtime.NumCPU()
 
 	work := make(chan string) // send comb's in here
@@ -139,7 +140,13 @@ func (f *HashFinder) FindParallel() (string, error) {
 	return "", fmt.Errorf("No value found for hash %v", f.Wanted)
 }
 
-func NewHashFinder(numCombs int, maxSize int, minSize int, charSet string, wanted string, print bool) HashFinder {
+func NewHashFinder(numCombs int,
+	maxSize int,
+	minSize int,
+	charSet string,
+	wanted string,
+	print bool,
+	numWorkers int) HashFinder {
 	comb := combinator.NewState(charSet, minSize)
 	finder := HashFinder{
 		NumCombs:   numCombs,
@@ -147,6 +154,7 @@ func NewHashFinder(numCombs int, maxSize int, minSize int, charSet string, wante
 		Wanted:     wanted,
 		combinator: comb,
 		Print:      print,
+		NumWorkers: numWorkers,
 	}
 	return finder
 }

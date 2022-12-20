@@ -13,7 +13,9 @@ test-run:
 	set +e; set -x;
 	go run . 0cc175b9c0f1b6a831c399e269772661
 	go run . 900150983cd24fb0d6963f7d28e17f72
+	go run . ab56b4d92b40713acc5af89985d4b786 --max-size 6
 	go run . e2fc714c4727ee9395f324cd2e7f331f --max-size 2
+
 
 # // comparison; <4s on M1 MacBook Air
 # // $ ./hashcat -m 0 -a 3 ab56b4d92b40713acc5af89985d4b786
@@ -24,9 +26,9 @@ test-run:
 
 
 
-# build:
-# 	go build -o ./dupefinder cmd/main.go
-# .PHONY:build
+build:
+	go build -o ./hashsnail main.go
+.PHONY:build
 
 # # https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04
 # GIT_TAG:=$(shell git describe --tags)
