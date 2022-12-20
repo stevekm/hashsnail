@@ -15,8 +15,9 @@ test-run:
 	go run . 0cc175b9c0f1b6a831c399e269772661 # a
 	go run . 900150983cd24fb0d6963f7d28e17f72 # abc
 	go run . 26ca5bfe74f8de88ccaac5c0f44b349d # abcc
-	go run . ab56b4d92b40713acc5af89985d4b786 --max-size 6 --char-set $(CHARS) # abcde
+	go run . ab56b4d92b40713acc5af89985d4b786 --char-set $(CHARS) # abcde
 	go run . e2fc714c4727ee9395f324cd2e7f331f # abcd
+	go run . ab56b4d92b40713acc5af89985d4b786 --max-size 2
 
 # This one is deadlocking at {~ a415703380621ae08574dd5a1f2cb579
 # go run . e2fc714c4727ee9395f324cd2e7f331f --max-size 2

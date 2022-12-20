@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"github.com/alecthomas/kong"
 	"hashsnail/combinator"
 	_hash "hashsnail/hash"
@@ -61,12 +61,12 @@ func run(
 
 	finder := _hash.NewHashFinder(numCombs, maxSize, minSize, charSet, wanted, print, numThreads)
 	// fmt.Printf("finder:%v\n", finder)
-	result, err := finder.FindParallel()
+	_, err := finder.FindParallel() // result, err
 	if err != nil {
 		log.Fatalf("%v", err)
 		return err
 	}
-	fmt.Printf(">>> FOUND value '%v' for hash %v\n", result, wanted)
+	log.Println(finder.Descr())
 
 	return nil
 }

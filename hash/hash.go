@@ -26,6 +26,8 @@ type HashFinder struct {
 	Wanted     string // the hash we want to match
 	Print      bool
 	NumWorkers int
+	NumGenerated uint
+	Result HashResult
 }
 
 func (f *HashFinder) IsMaxSize(comb string) bool {
@@ -43,7 +45,7 @@ func (f *HashFinder) Find() (string, error) {
 		if len(comb) > f.MaxSize {
 			break
 		}
-		hash := GetHash(comb)
+		hash := f.GetHash(comb)
 		if f.Print {
 			fmt.Printf("%v %v\n", comb, hash)
 		}
@@ -58,8 +60,11 @@ func (f *HashFinder) Find() (string, error) {
 
 
 func (f *HashFinder) FindParallel() (string, error) {
+	// find the string char combination that creates the desired hash
+	// using concurrent parallel hash worker threads
+
 	numWorkers := f.NumWorkers
-	runtime.GOMAXPROCS(numWorkers + 1)
+	runtime.GOMAXPROCS(numWorkers + 1) // add an extra for the combinator
 
 	work := make(chan string) // send comb's in here
 	results := make(chan HashResult) // send hash result back out here
@@ -78,7 +83,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 			// get the next combination from the work channel
 			for comb := range work {
 				// make the hash
-				hash := GetHash(comb)
+				hash := f.GetHash(comb)
 				if f.Print {
 					fmt.Printf("%v %v\n", comb, hash)
 				}
@@ -169,11 +174,25 @@ func (f *HashFinder) FindParallel() (string, error) {
 	// channel is closed and the last value
 	// has been received
 	for result := range results {
-		log.Printf("RESULT:%v\n", result)
+		f.Result = result
+		if f.Print {
+			log.Printf("RESULT:%v\n", result)
+		}
 		return result.Result, nil
 	}
 
 	return "", fmt.Errorf("No value found for hash %v", f.Wanted)
+}
+
+func (f *HashFinder) GetHash(comb string) string {
+	hash := GetHash(comb)
+	f.NumGenerated++
+	return hash
+}
+
+func (f *HashFinder) Descr() string {
+	// return a string describing the final state of the finder
+	return fmt.Sprintf("%v %v (%v hashes)", f.Result.Result, f.Result.Hash, f.NumGenerated)
 }
 
 func NewHashFinder(numCombs int,
@@ -191,6 +210,7 @@ func NewHashFinder(numCombs int,
 		combinator: comb,
 		Print:      print,
 		NumWorkers: numWorkers,
+		Result: HashResult{},
 	}
 	return finder
 }
