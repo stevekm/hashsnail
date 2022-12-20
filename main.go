@@ -39,7 +39,8 @@ func run(
 	print := progress
 	wanted := hash
 	finder := _hash.NewHashFinder(numCombs, maxSize, minSize, charSet, wanted, print)
-	result, err := finder.Find()
+	// result, err := finder.Find()
+	result, err := finder.FindParallel()
 	if err != nil {
 		log.Fatalf("%v", err)
 		return err

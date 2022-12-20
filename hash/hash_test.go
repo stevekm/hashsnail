@@ -22,13 +22,13 @@ func TestHash(t *testing.T) {
 	})
 
 
-	t.Run("test_find_parallel1", func(t *testing.T) {
+	t.Run("0test_find_parallel", func(t *testing.T) {
 		numCombs := 10000
 		maxSize := 2
 		minSize := 0
 		charSet := "abcd"
 		wantedHash := "4a8a08f09d37b73795649038408b5f33"
-		print := true
+		print := false
 		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print)
 		got, _ := finder.FindParallel()
 		want := "c"
@@ -37,8 +37,24 @@ func TestHash(t *testing.T) {
 		}
 	})
 
-	// t.Run("test_find_parallel_not_found", func(t *testing.T) {
-	// 	numCombs := 10000000 * 10000000 // a big number
+	t.Run("1test_find_parallel_max_size_exceeded", func(t *testing.T) {
+		numCombs := 10000
+		maxSize := 2
+		minSize := 0
+		charSet := "abc"
+		wantedHash := "26ca5bfe74f8de88ccaac5c0f44b349d"
+		print := false
+		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print)
+		got, _ := finder.FindParallel()
+		want := "" // "abcc"
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("got vs want mismatch (-want +got):\n%s", diff)
+		}
+	})
+
+	// t.Run("1test_find_parallel_not_found", func(t *testing.T) {
+	// 	// the desired combination is not possible from the charSet values
+	// 	numCombs := 10000000
 	// 	maxSize := 2
 	// 	minSize := 0
 	// 	charSet := "def"

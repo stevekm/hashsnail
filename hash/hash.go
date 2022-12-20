@@ -77,7 +77,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 						Hash: hash,
 						Result: comb,
 					}
-					fmt.Printf("worker found a result: %v %v\n", result.Result, result.Hash)
+					// fmt.Printf("worker found a result: %v %v\n", result.Result, result.Hash)
 					// send the correct result to the output channel
 					results <- result
 					// stop sending work
@@ -97,39 +97,43 @@ func (f *HashFinder) FindParallel() (string, error) {
 	// once all workers are busy
 	go func(ctx context.Context) {
 		// send all string combinations to the hash workers
-		fmt.Println("starting combinator")
+		// fmt.Println("starting combinator")
+		combinator:
 		for i := 0; i < f.NumCombs; i++ {
 			select {
 			case <-ctx.Done(): // if cancel() execute, stop sending more work
-				fmt.Println("combinator got cancel() signal")
+				// fmt.Println("combinator got cancel() signal")
 				// close the work channel and exit
-				close(work)
-				return
-				// break
+				// close(work)
+				// return
+				break combinator
 			default:
 				// get the next combination
 				comb := f.combinator.Next()
 				// stop sending work if we have exceeded the max size
 				if len(comb) > f.MaxSize {
-					fmt.Println("combinator max size exceeded")
-					// cancel()
+					// fmt.Println("combinator max size exceeded")
+					cancel()
 					// close(work)
 					// return
-					break
+					// break
+					continue
 				} else {
 					// send the combination to the worker
-					fmt.Printf("sending comb:%v\n", comb)
+					// fmt.Printf("sending comb:%v\n", comb)
 					work <- comb
 				}
 			}
 		}
-		fmt.Println("done all combinations")
+		// fmt.Println("done all combinations")
+
 		// close the work channel after all the work has been send
-		// close(work)
 		// wait for the workers to finish
 		// then close the results channel
-		// wg.Wait()
-		// close(results)
+		// NOTE: this should only trigger if no hash results were found!
+		close(work)
+		wg.Wait()
+		close(results)
 	}(ctx)
 
 	// collect the results
