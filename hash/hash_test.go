@@ -39,6 +39,22 @@ func TestHash(t *testing.T) {
 		}
 	})
 
+	t.Run("test_find_parallel_neg_numCombs", func(t *testing.T) {
+		numCombs := -1 // this should be unlimited number of searches
+		maxSize := 2
+		minSize := 0
+		charSet := "abcd"
+		wantedHash := "4a8a08f09d37b73795649038408b5f33"
+		print := false
+		numThreads := 2
+		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print, numThreads)
+		got, _ := finder.FindParallel()
+		want := "c"
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("got vs want mismatch (-want +got):\n%s", diff)
+		}
+	})
+
 	t.Run("1test_find_parallel_max_size_exceeded", func(t *testing.T) {
 		// the desired combination is larger than the allowed maxSize and wont be found
 		numCombs := 10000

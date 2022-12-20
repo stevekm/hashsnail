@@ -99,12 +99,38 @@ func (f *HashFinder) FindParallel() (string, error) {
 	// once all workers are busy
 	go func(ctx context.Context) {
 		// send all string combinations to the hash workers
-		combinator:
-		for i := 0; i < f.NumCombs; i++ {
+
+		// TODO: make this cleaner
+
+		// unlimited number of combinations
+		if f.NumCombs < 0 {
+			combinatorUnlimited:
+			for {
+				select {
+				case <-ctx.Done(): // if cancel() is executed, stop sending more work
+					// exit the combinator loop
+					break combinatorUnlimited
+				default:
+					// get the next combination
+					comb := f.combinator.Next()
+					// stop sending work if we have exceeded the max size
+					if len(comb) > f.MaxSize {
+						cancel()
+						continue
+					} else {
+						// send the combination to the worker
+						work <- comb
+					}
+				}
+			}
+		} else {
+			// only run until we hit max NumCombs value
+			combinatorNumCombs:
+			for i := 0; i < f.NumCombs; i++ {
 			select {
 			case <-ctx.Done(): // if cancel() is executed, stop sending more work
 				// exit the combinator loop
-				break combinator
+				break combinatorNumCombs
 			default:
 				// get the next combination
 				comb := f.combinator.Next()
@@ -126,6 +152,8 @@ func (f *HashFinder) FindParallel() (string, error) {
 		close(work)
 		wg.Wait()
 		close(results)
+		}
+
 	}(ctx)
 
 	// collect the results

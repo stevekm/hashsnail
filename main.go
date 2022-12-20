@@ -16,6 +16,7 @@ type CLI struct {
 	Progress bool   `help:"print hasing progress to console"` // false by default
 	Threads *int `help:"number of CPU threads to use, defaults all CPU cores"`
 	CharSet *string `help:"characters to use for search"`
+	Combs *int `help:"max number of character combinations to test, defaults to unlimited"`
 }
 
 func (cli *CLI) Run() error {
@@ -26,6 +27,7 @@ func (cli *CLI) Run() error {
 		cli.Progress,
 		cli.Threads,
 		cli.CharSet,
+		cli.Combs,
 	)
 	if err != nil {
 		log.Fatalln(err)
@@ -40,12 +42,16 @@ func run(
 	progress bool,
 	threads *int,
 	chars *string,
+	combs *int,
 ) error {
 	numThreads := runtime.NumCPU()
 	if threads != nil {
 		numThreads = *threads
 	}
-	numCombs := 10000000 * 10000000 // a big number
+	numCombs := -1 // 10000000 * 10000000 // a big number
+	if combs != nil {
+		numCombs = *combs
+	}
 	charSet := combinator.CharSetDefault
 	if chars != nil {
 		charSet = *chars
