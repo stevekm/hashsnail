@@ -105,4 +105,22 @@ func TestHash(t *testing.T) {
 			t.Errorf("got vs want mismatch (-want +got):\n%s", diff)
 		}
 	})
+
+	// NOTE: This one is deadlocking, need to fix this !!
+	// t.Run("1test_find_not_found2", func(t *testing.T) {
+	// 	// the desired combination is not possible from the charSet values
+	// 	numCombs := -1
+	// 	maxSize := -1
+	// 	minSize := 0
+	// 	charSet := "def"
+	// 	wantedHash := "e2fc714c4727ee9395f324cd2e7f331f" // "abcd"
+	// 	print := false
+	// 	numThreads := 2
+	// 	finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print, numThreads)
+	// 	got, _ := finder.FindParallel() // TODO: check the error instead!
+	// 	want := "" // "abcd"
+	// 	if diff := cmp.Diff(want, got); diff != "" {
+	// 		t.Errorf("got vs want mismatch (-want +got):\n%s", diff)
+	// 	}
+	// })
 }
