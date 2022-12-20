@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"sync"
 	"context"
+	"time"
 )
 
 type HashResult struct {
@@ -28,6 +29,7 @@ type HashFinder struct {
 	NumWorkers int
 	NumGenerated uint
 	Result HashResult
+	Time time.Duration // an int64 nanosecond count https://pkg.go.dev/time#Duration
 }
 
 func (f *HashFinder) IsMaxSize(comb string) bool {
@@ -62,6 +64,7 @@ func (f *HashFinder) Find() (string, error) {
 func (f *HashFinder) FindParallel() (string, error) {
 	// find the string char combination that creates the desired hash
 	// using concurrent parallel hash worker threads
+	startTime := time.Now()
 
 	numWorkers := f.NumWorkers
 	runtime.GOMAXPROCS(numWorkers + 1) // add an extra for the combinator
@@ -175,6 +178,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 	// has been received
 	for result := range results {
 		f.Result = result
+		f.Time = time.Now().Sub(startTime)
 		if f.Print {
 			log.Printf("RESULT:%v\n", result)
 		}
@@ -192,7 +196,7 @@ func (f *HashFinder) GetHash(comb string) string {
 
 func (f *HashFinder) Descr() string {
 	// return a string describing the final state of the finder
-	return fmt.Sprintf("%v %v (%v hashes)", f.Result.Result, f.Result.Hash, f.NumGenerated)
+	return fmt.Sprintf("%v %v (%v hashes, %v)", f.Result.Result, f.Result.Hash, f.NumGenerated, f.Time)
 }
 
 func NewHashFinder(numCombs int,
