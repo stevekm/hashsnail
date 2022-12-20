@@ -8,9 +8,9 @@ import (
 const CharSetDefault = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST1234567890 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 
 type State struct {
-	indexes []int    // keeps track of which characters should be returned
-	Chars   []string // character set to build combinations from
-	NumGenerated uint // number of combinations generated
+	indexes      []int    // keeps track of which characters should be returned
+	Chars        []string // character set to build combinations from
+	NumGenerated uint     // number of combinations generated
 }
 
 func (s *State) Get() string {

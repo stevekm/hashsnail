@@ -1,35 +1,35 @@
 package hash
 
 import (
-	"log"
 	"fmt"
+	"log"
 	// "errors" //errors.New("No value found for hash")
 	"crypto/md5"
 	"hashsnail/combinator"
 	// "crypto/sha1"
 	// "crypto/sha256"
+	"context"
 	"encoding/hex"
 	"runtime"
 	"sync"
-	"context"
 	"time"
 )
 
 type HashResult struct {
-	Hash string
+	Hash   string
 	Result string
 }
 
 type HashFinder struct {
-	NumCombs   int
-	MaxSize    int // size of string to hash
-	combinator combinator.State
-	Wanted     string // the hash we want to match
-	Print      bool
-	NumWorkers int
+	NumCombs     int
+	MaxSize      int // size of string to hash
+	combinator   combinator.State
+	Wanted       string // the hash we want to match
+	Print        bool
+	NumWorkers   int
 	NumGenerated uint
-	Result HashResult
-	Time time.Duration // an int64 nanosecond count https://pkg.go.dev/time#Duration
+	Result       HashResult
+	Time         time.Duration // an int64 nanosecond count https://pkg.go.dev/time#Duration
 }
 
 func (f *HashFinder) IsMaxSize(comb string) bool {
@@ -59,8 +59,6 @@ func (f *HashFinder) Find() (string, error) {
 	return "", fmt.Errorf("No value found for hash %v", f.Wanted)
 }
 
-
-
 func (f *HashFinder) FindParallel() (string, error) {
 	// find the string char combination that creates the desired hash
 	// using concurrent parallel hash worker threads
@@ -69,7 +67,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 	numWorkers := f.NumWorkers
 	runtime.GOMAXPROCS(numWorkers + 1) // add an extra for the combinator
 
-	work := make(chan string) // send comb's in here
+	work := make(chan string)        // send comb's in here
 	results := make(chan HashResult) // send hash result back out here
 
 	// signal to stop sending work to the hash checkers
@@ -93,7 +91,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 				// check if its the correct hash
 				if hash == f.Wanted {
 					result := HashResult{
-						Hash: hash,
+						Hash:   hash,
 						Result: comb,
 					}
 					// send the correct result to the output channel
@@ -120,7 +118,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 
 		// unlimited number of combinations
 		if f.NumCombs < 0 {
-			combinatorUnlimited:
+		combinatorUnlimited:
 			for {
 				select {
 				case <-ctx.Done(): // if cancel() is executed, stop sending more work
@@ -141,7 +139,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 			}
 		} else {
 			// only run until we hit max NumCombs value
-			combinatorNumCombs:
+		combinatorNumCombs:
 			for i := 0; i < f.NumCombs; i++ {
 				select {
 				case <-ctx.Done(): // if cancel() is executed, stop sending more work
@@ -161,13 +159,13 @@ func (f *HashFinder) FindParallel() (string, error) {
 				}
 			}
 
-		// close the work channel after all the work has been sent
-		// wait for the workers to finish
-		// then close the results channel
-		// NOTE: this should only trigger if no hash results were found!
-		close(work)
-		wg.Wait()
-		close(results)
+			// close the work channel after all the work has been sent
+			// wait for the workers to finish
+			// then close the results channel
+			// NOTE: this should only trigger if no hash results were found!
+			close(work)
+			wg.Wait()
+			close(results)
 		}
 
 	}(ctx)
@@ -214,7 +212,7 @@ func NewHashFinder(numCombs int,
 		combinator: comb,
 		Print:      print,
 		NumWorkers: numWorkers,
-		Result: HashResult{},
+		Result:     HashResult{},
 	}
 	return finder
 }

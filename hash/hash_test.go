@@ -22,7 +22,6 @@ func TestHash(t *testing.T) {
 		}
 	})
 
-
 	t.Run("0test_find_parallel", func(t *testing.T) {
 		numCombs := 10000
 		maxSize := 2
@@ -66,7 +65,7 @@ func TestHash(t *testing.T) {
 		numThreads := 2
 		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print, numThreads)
 		got, _ := finder.FindParallel() // TODO: check the error instead!
-		want := "" // "abcc"
+		want := ""                      // "abcc"
 		if diff := cmp.Diff(want, got); diff != "" {
 			t.Errorf("got vs want mismatch (-want +got):\n%s", diff)
 		}
@@ -100,7 +99,7 @@ func TestHash(t *testing.T) {
 		numThreads := 2
 		finder := NewHashFinder(numCombs, maxSize, minSize, charSet, wantedHash, print, numThreads)
 		got, _ := finder.FindParallel() // TODO: check the error instead!
-		want := "" // "c"
+		want := ""                      // "c"
 		if diff := cmp.Diff(want, got); diff != "" {
 			t.Errorf("got vs want mismatch (-want +got):\n%s", diff)
 		}
