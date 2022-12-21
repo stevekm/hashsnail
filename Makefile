@@ -52,13 +52,13 @@ HUNTER:=6b1b36cbb04b41490bfc0ab2bfa26f86
 HUNTE:=9e3ae1b513b828922d4f691254bda0c1
 # (4068424926 hashes, 1h28m58.767790988s)
 HUNT:=bc9bf7bb6c4ab8d0daf374963110f4a7
-# (56243782 hashes, 1m3.520669683s)
+# (73541667 hashes, 1m22.886008099s, 0.9MH on 32 workers)
 HUN:=fe1b3b54fde5b24bb40f22cdd621f5d0
-# (584970 hashes, 575.490021ms)
+# (720910 hashes, 742.72929ms, 1.0MH on 32 workers)
 HU:=18bd9197cb1d833bc352f47535c00320
-# (7153 hashes, 5.649212ms)
+# (8210 hashes, 5.432156ms, 1.5MH on 32 workers)
 H:=2510c39011c5be704182423e3a695e91
-# (69 hashes, 308.426µs)
+# (42 hashes, 219.44µs, 0.2MH on 32 workers)
 
 HASHES:=$(H) $(HU) $(HUN) $(HUNT) $(HUNTE) $(HUNTER) $(HUNTER2)
 test-hashes:build $(BIN)
