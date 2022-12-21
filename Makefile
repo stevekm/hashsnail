@@ -45,6 +45,25 @@ test-run:
 # >>> FOUND value 'abcde' for hash ab56b4d92b40713acc5af89985d4b786
 # go run . ab56b4d92b40713acc5af89985d4b786 --threads 8 --char-set abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST  98.44s user 20.32s system 250% cpu 47.402 total
 
+
+
+HUNTER2:=2ab96390c7dbe3439de74d0c9b0b1767
+HUNTER:=6b1b36cbb04b41490bfc0ab2bfa26f86
+HUNTE:=9e3ae1b513b828922d4f691254bda0c1
+HUNT:=bc9bf7bb6c4ab8d0daf374963110f4a7
+# (56243782 hashes, 1m3.520669683s)
+HUN:=fe1b3b54fde5b24bb40f22cdd621f5d0
+# (584970 hashes, 575.490021ms)
+HU:=18bd9197cb1d833bc352f47535c00320
+# (7153 hashes, 5.649212ms)
+H:=2510c39011c5be704182423e3a695e91
+# (69 hashes, 308.426µs)
+
+HASHES:=$(H) $(HU) $(HUN) $(HUNT) $(HUNTE) $(HUNTER) $(HUNTER2)
+test-hashes:
+	for i in $(HASHES); do time ./hashsnail $$i; done
+
+
 build:
 	go build -o ./hashsnail main.go
 .PHONY:build
