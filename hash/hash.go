@@ -31,6 +31,7 @@ type HashFinder struct {
 	NumGenerated uint
 	Result       HashResult
 	Time         time.Duration // an int64 nanosecond count https://pkg.go.dev/time#Duration
+	Rate float64
 }
 
 func (f *HashFinder) IsMaxSize(comb string) bool {
@@ -178,6 +179,7 @@ func (f *HashFinder) FindParallel() (string, error) {
 	for result := range results {
 		f.Result = result
 		f.Time = time.Now().Sub(startTime)
+		f.Rate = float64(f.NumGenerated) / f.Time.Seconds()
 		if f.Print {
 			log.Printf("RESULT:%v\n", result)
 		}
@@ -217,7 +219,13 @@ func (f *HashFinder) DescribeStart() string {
 
 func (f *HashFinder) DescribeResults() string {
 	// return a string describing the final state of the finder
-	return fmt.Sprintf("%v %v (%v hashes, %v)", f.Result.Result, f.Result.Hash, f.NumGenerated, f.Time)
+	return fmt.Sprintf("%v %v (%v hashes, %v, %.1fMH on %v workers)", 
+		f.Result.Result, 
+		f.Result.Hash, 
+		f.NumGenerated, 
+		f.Time, f.Rate / 1000000, // megahashes
+		f.NumWorkers,
+		) 
 }
 
 func NewHashFinder(numCombs int,
