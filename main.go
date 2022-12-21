@@ -60,13 +60,13 @@ func run(
 	wanted := hash
 
 	finder := _hash.NewHashFinder(numCombs, maxSize, minSize, charSet, wanted, print, numThreads)
-	// fmt.Printf("finder:%v\n", finder)
+	log.Printf("Starting finder:%v\n", finder.DescribeStart())
 	_, err := finder.FindParallel() // result, err
 	if err != nil {
 		log.Fatalf("%v", err)
 		return err
 	}
-	log.Println(finder.Descr())
+	log.Printf("Result found: %v", finder.DescribeResults())
 
 	return nil
 }

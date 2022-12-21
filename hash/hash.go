@@ -3,6 +3,7 @@ package hash
 import (
 	"fmt"
 	"log"
+	"strings"
 	// "errors" //errors.New("No value found for hash")
 	"crypto/md5"
 	"hashsnail/combinator"
@@ -192,7 +193,29 @@ func (f *HashFinder) GetHash(comb string) string {
 	return hash
 }
 
-func (f *HashFinder) Descr() string {
+func (f *HashFinder) DescribeStart() string {
+	// make a condensed string output for printing the starting state of the finder
+	type Desc struct {
+		Wanted string
+		NumCombs int
+		MaxSize int
+		NumWorkers int
+		Print bool
+		CharSet string
+	}
+	d := Desc{
+		CharSet: strings.Join(f.combinator.Chars, ""),
+		NumCombs: f.NumCombs,
+		MaxSize: f.MaxSize,
+		Wanted: f.Wanted,
+		Print: f.Print,
+		NumWorkers: f.NumWorkers,
+	}
+	fmt.Println("DescribeStart")
+	return fmt.Sprintf("%#v", d)
+}
+
+func (f *HashFinder) DescribeResults() string {
 	// return a string describing the final state of the finder
 	return fmt.Sprintf("%v %v (%v hashes, %v)", f.Result.Result, f.Result.Hash, f.NumGenerated, f.Time)
 }
