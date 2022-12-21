@@ -213,7 +213,7 @@ func (f *HashFinder) DescribeStart() string {
 		Print: f.Print,
 		NumWorkers: f.NumWorkers,
 	}
-	fmt.Println("DescribeStart")
+
 	return fmt.Sprintf("%#v", d)
 }
 

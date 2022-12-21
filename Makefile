@@ -61,13 +61,13 @@ H:=2510c39011c5be704182423e3a695e91
 # (69 hashes, 308.426µs)
 
 HASHES:=$(H) $(HU) $(HUN) $(HUNT) $(HUNTE) $(HUNTER) $(HUNTER2)
-test-hashes:
-	for i in $(HASHES); do time ./hashsnail $$i; done
+test-hashes:build $(BIN)
+	for i in $(HASHES); do time ./$(BIN) $$i; done
 
-
-build:
-	go build -o ./hashsnail main.go
-.PHONY:build
+BIN:=hashsnail
+build:$(BIN)
+	go build -o ./$(BIN) main.go
+.PHONY:build $(BIN)
 
 # # https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04
 # GIT_TAG:=$(shell git describe --tags)
