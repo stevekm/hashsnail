@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-const CharSetDefault = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST1234567890 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+const CharSetDefault = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 
 type State struct {
 	indexes      []int    // keeps track of which characters should be returned
