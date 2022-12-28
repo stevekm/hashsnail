@@ -7,11 +7,12 @@ import (
 	"time"
 )
 
-const CharSetDefault = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST1234567890 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+const CharSetDefault = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 
 type State struct {
-	indexes []int    // keeps track of which characters should be returned
-	Chars   []string // character set to build combinations from
+	indexes      []int    // keeps track of which characters should be returned
+	Chars        []string // character set to build combinations from
+	NumGenerated uint     // number of combinations generated
 }
 
 func (s *State) Get() string {
@@ -52,6 +53,7 @@ func (s *State) Next() string {
 	// get the next combination then increment the indexes
 	result := s.Get()
 	s.Increment()
+	s.NumGenerated++
 	return result
 }
 
