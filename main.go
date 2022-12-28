@@ -10,11 +10,14 @@ import (
 )
 
 type CLI struct {
-	Hash     string `help:"hash string to crack" arg:""` // required positional arg
-	MaxSize  int    `help:"max length of password to search for" default:8`
-	MinSize  int    `help:"min length of password to search for" default:0`
-	Progress bool   `help:"print hasing progress to console"` // false by default
-	Threads *int `help:"number of CPU threads to use, defaults all CPU cores"`
+	Hash     string  `help:"hash string to crack" arg:""` // required positional arg
+	MaxSize  int     `help:"max length of password to search for" default:-1`
+	MinSize  int     `help:"min length of password to search for" default:0`
+	Progress bool    `help:"print hasing progress to console"` // false by default
+	Threads  *int    `help:"number of CPU threads to use, defaults all CPU cores"`
+	CharSet  *string `help:"characters to use for search"`
+	Combs    *int    `help:"max number of character combinations to test, defaults to unlimited"`
+	Debug bool `help:"this option does nothing do not use it"` // false by default
 }
 
 func (cli *CLI) Run() error {
@@ -24,6 +27,9 @@ func (cli *CLI) Run() error {
 		cli.MinSize,
 		cli.Progress,
 		cli.Threads,
+		cli.CharSet,
+		cli.Combs,
+		cli.Debug,
 	)
 	if err != nil {
 		log.Fatalln(err)
@@ -37,7 +43,17 @@ func run(
 	minSize int,
 	progress bool,
 	threads *int,
+	chars *string,
+	combs *int,
+	debug bool,
 ) error {
+	if debug == true {
+		log.Println("debug activated")
+		combinator.CombTimer()
+		combinator.CombTimer2()
+		combinator.IterTimer()
+		return nil
+	}
 	numThreads := runtime.NumCPU()
 	if threads != nil {
 		numThreads = *threads
