@@ -26,13 +26,13 @@ func (s *State) Get() string {
 	return strings.Join(result, "")
 }
 
-func (s *State) Increment() {
+func (s *State) increment() {
 	// increment the left-most index, then carry values through to the right-hand side
 	s.indexes[0]++
-	s.Carry()
+	s.carry()
 }
 
-func (s *State) Carry() {
+func (s *State) carry() {
 	// reset index values from left to right to carry the value greater than the number of characters
 	for i, val := range s.indexes {
 		if val > len(s.Chars)-1 {
@@ -52,7 +52,7 @@ func (s *State) Carry() {
 func (s *State) Next() string {
 	// get the next combination then increment the indexes
 	result := s.Get()
-	s.Increment()
+	s.increment()
 	s.NumGenerated++
 	return result
 }
@@ -89,8 +89,7 @@ func GetCombs(charSet string, numCombs int, minSize int) []string {
 	combs := []string{}
 	state := NewState(charSet, minSize)
 	for i := 0; i < numCombs; i++ {
-		comb := state.Next()
-		combs = append(combs, comb)
+		combs = append(combs, state.Next())
 	}
 	return combs
 }
