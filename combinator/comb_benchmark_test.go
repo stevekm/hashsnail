@@ -104,6 +104,9 @@ func BenchmarkRawIterator(b *testing.B) {
 
 // Benchmark results
 // M1 MacBook Air
+// https://www.anandtech.com/show/16252/mac-mini-apple-m1-tested;
+// 3.2GHz , 8x 16-bit memory channels LPDDR4X-4266 memory, peak of 68.25GB/s memory bandwidth
+// need to look at more L1/L2 cache speed details too
 // [BenchmarkCombinator/combinator_10000000] numCombs: 10000000, elapsed 1.265366083s, rate:7.9M/s
 // [BenchmarkCombinator/combinator_20000000] numCombs: 20000000, elapsed 2.500602541s, rate:8.0M/s
 // [BenchmarkCombinator/combinator_40000000] numCombs: 40000000, elapsed 5.019067959s, rate:8.0M/s
