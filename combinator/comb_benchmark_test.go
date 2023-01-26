@@ -124,3 +124,24 @@ func BenchmarkRawIterator(b *testing.B) {
 // [BenchmarkRawIterator/raw_iterator_10000000] numCombs: 10000000, elapsed 3.235458ms, rate:3090.8M/s
 // [BenchmarkRawIterator/raw_iterator_20000000] numCombs: 20000000, elapsed 6.356209ms, rate:3146.5M/s
 // [BenchmarkRawIterator/raw_iterator_20000000] numCombs: 20000000, elapsed 6.28575ms, rate:3181.8M/s
+
+
+// Ryzen 3950X + 64GB DDR4 3200MHz
+// [BenchmarkCombinator/combinator_10000000] numCombs: 10000000, elapsed 3.675008393s, rate:2.7M/s
+// [BenchmarkCombinator/combinator_20000000] numCombs: 20000000, elapsed 7.834336221s, rate:2.6M/s
+// [BenchmarkCombinator/combinator_40000000] numCombs: 40000000, elapsed 15.541499958s, rate:2.6M/s
+// [BenchmarkCombinator/combinator_80000000] numCombs: 80000000, elapsed 31.235968711s, rate:2.6M/s
+// [BenchmarkCombinator/combinator_100000000] numCombs: 100000000, elapsed 41.774112917s, rate:2.4M/s
+// [BenchmarkCombinator/combinator_150000000] numCombs: 150000000, elapsed 1m8.917689113s, rate:2.2M/s
+// [BenchmarkCombinator2] numCombs: 290320, elapsed 249.41µs, rate:1164.0M/s
+// [BenchmarkCombinator2] numCombs: 290320, elapsed 213.003µs, rate:1363.0M/s
+// [BenchmarkCombinator2] numCombs: 290320, elapsed 265.399µs, rate:1093.9M/s
+// [BenchmarkCombinator2] numCombs: 290320, elapsed 214.696µs, rate:1352.2M/s
+// [BenchmarkCombinator2] numCombs: 290320, elapsed 185.031µs, rate:1569.0M/s
+// [BenchmarkCombinator2] numCombs: 290320, elapsed 191.634µs, rate:1515.0M/s
+// [BenchmarkRawIterator/raw_iterator_10000000] numCombs: 10000000, elapsed 9.781939ms, rate:1022.3M/s
+// [BenchmarkRawIterator/raw_iterator_10000000] numCombs: 10000000, elapsed 9.127493ms, rate:1095.6M/s
+// [BenchmarkRawIterator/raw_iterator_10000000] numCombs: 10000000, elapsed 9.119298ms, rate:1096.6M/s
+// [BenchmarkRawIterator/raw_iterator_10000000] numCombs: 10000000, elapsed 9.12055ms, rate:1096.4M/s
+// [BenchmarkRawIterator/raw_iterator_10000000] numCombs: 10000000, elapsed 9.119299ms, rate:1096.6M/s
+// [BenchmarkRawIterator/raw_iterator_10000000] numCombs: 10000000, elapsed 9.119026ms, rate:1096.6M/s
