@@ -49,9 +49,12 @@ func run(
 ) error {
 	if debug == true {
 		log.Println("debug activated")
-		combinator.CombTimer()
-		combinator.CombTimer2()
-		combinator.IterTimer()
+		// put some function calls here for when I am debugging things and need
+		// an easier CLI entrypoint
+		// NOTE: also consider using go test and go test -bench for this instead from now on
+		// combinator.CombTimer()
+		// combinator.CombTimer2()
+		// combinator.IterTimer()
 		return nil
 	}
 	numThreads := runtime.NumCPU()

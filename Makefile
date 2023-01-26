@@ -1,14 +1,25 @@
 SHELL:=/bin/bash
 .ONESHELL:
 
+# apply code formatting
 format:
 	gofmt -l -w .
 
+# run the full test suite, colorized PASS/FAIL messages
 test:
 	set -euo pipefail
 	go clean -testcache && \
 	go test -v ./... | sed ''/PASS/s//$$(printf "\033[32mPASS\033[0m")/'' | sed ''/FAIL/s//$$(printf "\033[31mFAIL\033[0m")/''
 
+# run the full benchmark suite
+# NOTE: run a single module benchmark set like this;
+# $ go test -bench=. -v combinator/*
+# $ go test -v -bench=BenchmarkCombinator combinator/*
+benchmark:
+	go test -v -bench=. ./...
+
+
+# these are some integration test cases for the full program
 CHARS:=abcdefghijklmnopqrstuvwxyz
 test-run:
 	set +e; set -x;
@@ -69,6 +80,8 @@ build:$(BIN)
 	go build -o ./$(BIN) main.go
 .PHONY:build $(BIN)
 
+
+# build executable for all platforms
 # # https://www.digitalocean.com/community/tutorials/how-to-build-go-executables-for-multiple-platforms-on-ubuntu-16-04
 # GIT_TAG:=$(shell git describe --tags)
 # build-all:
