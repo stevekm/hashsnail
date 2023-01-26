@@ -31,7 +31,7 @@ type HashFinder struct {
 	NumGenerated uint
 	Result       HashResult
 	Time         time.Duration // an int64 nanosecond count https://pkg.go.dev/time#Duration
-	Rate float64
+	Rate         float64
 }
 
 func (f *HashFinder) IsMaxSize(comb string) bool {
@@ -198,19 +198,19 @@ func (f *HashFinder) GetHash(comb string) string {
 func (f *HashFinder) DescribeStart() string {
 	// make a condensed string output for printing the starting state of the finder
 	type Desc struct {
-		Wanted string
-		NumCombs int
-		MaxSize int
+		Wanted     string
+		NumCombs   int
+		MaxSize    int
 		NumWorkers int
-		Print bool
-		CharSet string
+		Print      bool
+		CharSet    string
 	}
 	d := Desc{
-		CharSet: strings.Join(f.combinator.Chars, ""),
-		NumCombs: f.NumCombs,
-		MaxSize: f.MaxSize,
-		Wanted: f.Wanted,
-		Print: f.Print,
+		CharSet:    strings.Join(f.combinator.Chars, ""),
+		NumCombs:   f.NumCombs,
+		MaxSize:    f.MaxSize,
+		Wanted:     f.Wanted,
+		Print:      f.Print,
 		NumWorkers: f.NumWorkers,
 	}
 
@@ -219,13 +219,13 @@ func (f *HashFinder) DescribeStart() string {
 
 func (f *HashFinder) DescribeResults() string {
 	// return a string describing the final state of the finder
-	return fmt.Sprintf("%v %v (%v hashes, %v, %.1fMH on %v workers)", 
-		f.Result.Result, 
-		f.Result.Hash, 
-		f.NumGenerated, 
-		f.Time, f.Rate / 1000000, // megahashes
+	return fmt.Sprintf("%v %v (%v hashes, %v, %.1fMH on %v workers)",
+		f.Result.Result,
+		f.Result.Hash,
+		f.NumGenerated,
+		f.Time, f.Rate/1000000, // megahashes
 		f.NumWorkers,
-		) 
+	)
 }
 
 func NewHashFinder(numCombs int,

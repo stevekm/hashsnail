@@ -17,7 +17,7 @@ type CLI struct {
 	Threads  *int    `help:"number of CPU threads to use, defaults all CPU cores"`
 	CharSet  *string `help:"characters to use for search"`
 	Combs    *int    `help:"max number of character combinations to test, defaults to unlimited"`
-	Debug bool `help:"this option does nothing do not use it"` // false by default
+	Debug    bool    `help:"this option does nothing do not use it"` // false by default
 }
 
 func (cli *CLI) Run() error {
