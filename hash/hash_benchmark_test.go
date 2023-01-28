@@ -1,15 +1,22 @@
 package hash
 
 import (
-	// "fmt"
+	"fmt"
 	// "log"
 	"hashsnail/combinator"
 	"testing"
 )
 
+// always store the result to a package level variable
+// so the compiler cannot eliminate the Benchmark itself.
+// https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go
+var result string
+
 // $ go test -v -bench=. hash/*
 // to run only benchmarks and no unit tests;
 // $ go test -v -bench=. -run=^# hash/*
+// $ go test -trace trace.out -memprofile mem.out -cpuprofile cpu.out -v -bench=. -run=^# hash/*
+// https://go.dev/blog/pprof
 func BenchmarkHash(b *testing.B) {
 	// numCombs := -1 // this one deadlocks !!
 	tests := map[string]struct {
@@ -129,8 +136,9 @@ func BenchmarkHash(b *testing.B) {
 
 	for name, tc := range tests {
 		b.Run(name, func(b *testing.B) {
-			tc.finder.FindParallel() // result, _ :=
-			// fmt.Printf("Result found: %v\n", tc.finder.DescribeResults())
+			r, _ := tc.finder.FindParallel()
+			result = r
+			fmt.Printf("Result found: %v\n", tc.finder.DescribeResults())
 		})
 	}
 }
