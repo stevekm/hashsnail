@@ -16,6 +16,7 @@ var result string
 // to run only benchmarks and no unit tests;
 // $ go test -v -bench=. -run=^# hash/*
 // $ go test -trace trace.out -memprofile mem.out -cpuprofile cpu.out -v -bench=. -run=^# hash/*
+// $ go tool pprof cpu.out # top10
 // https://go.dev/blog/pprof
 func BenchmarkHash(b *testing.B) {
 	// numCombs := -1 // this one deadlocks !!
