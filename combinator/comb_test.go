@@ -30,4 +30,3 @@ func TestCombinator(t *testing.T) {
 		}
 	})
 }
-

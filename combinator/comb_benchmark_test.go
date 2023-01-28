@@ -128,7 +128,6 @@ func BenchmarkRawIterator(b *testing.B) {
 // [BenchmarkRawIterator/raw_iterator_20000000] numCombs: 20000000, elapsed 6.356209ms, rate:3146.5M/s
 // [BenchmarkRawIterator/raw_iterator_20000000] numCombs: 20000000, elapsed 6.28575ms, rate:3181.8M/s
 
-
 // Ryzen 3950X + 64GB DDR4 3200MHz
 // [BenchmarkCombinator/combinator_10000000] numCombs: 10000000, elapsed 3.675008393s, rate:2.7M/s
 // [BenchmarkCombinator/combinator_20000000] numCombs: 20000000, elapsed 7.834336221s, rate:2.6M/s
