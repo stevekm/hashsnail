@@ -7,7 +7,47 @@ import (
 	_hash "hashsnail/hash"
 	"log"
 	"runtime"
+	"runtime/pprof"
+	"os"
 )
+
+// https://pkg.go.dev/runtime/pprof
+// https://github.com/google/pprof/blob/main/doc/README.md
+// $ go tool pprof cpu.prof
+// $ go tool pprof mem.prof
+// (pprof) top
+func StartProfiler() (*os.File, *os.File) {
+	log.Println("Starting profiler")
+	cpuFileName := "cpu.prof"
+	cpuFile, err := os.Create(cpuFileName)
+	if err != nil {
+		log.Fatal("could not create CPU profile: ", err)
+	}
+	// defer cpuFile.Close() // error handling omitted for example
+	if err := pprof.StartCPUProfile(cpuFile); err != nil {
+		log.Fatal("could not start CPU profile: ", err)
+	}
+	// defer pprof.StopCPUProfile()
+	log.Printf("cpuFile: %v\n", cpuFileName)
+
+	memFileName := "mem.prof"
+	memFile, err := os.Create(memFileName)
+	if err != nil {
+		log.Fatal("could not create memory profile: ", err)
+	}
+	// defer WriteMemoryProfile(memFile)
+	log.Printf("memFile: %v\n", memFileName)
+
+
+	return cpuFile, memFile
+}
+func WriteMemoryProfile(memFile *os.File) {
+	runtime.GC() // get up-to-date statistics
+	if err := pprof.WriteHeapProfile(memFile); err != nil {
+		log.Fatal("could not write memory profile: ", err)
+	}
+}
+
 
 type CLI struct {
 	Hash     string  `help:"hash string to crack" arg:""` // required positional arg
@@ -47,14 +87,20 @@ func run(
 	combs *int,
 	debug bool,
 ) error {
+	// $ go run . --debug zzz
 	if debug == true {
 		log.Println("debug activated")
+		cpuFile, memFile := StartProfiler()
+		defer cpuFile.Close()
+		defer memFile.Close()
+		defer pprof.StopCPUProfile()
+		defer WriteMemoryProfile(memFile)
+
+
 		// put some function calls here for when I am debugging things and need
 		// an easier CLI entrypoint
-		// NOTE: also consider using go test and go test -bench for this instead from now on
-		// combinator.CombTimer()
-		// combinator.CombTimer2()
-		// combinator.IterTimer()
+		combinator.DemoCombinator(100000000, "debug")
+		// combinator.DemoIterate(10000000000, "debug")
 		return nil
 	}
 	numThreads := runtime.NumCPU()
