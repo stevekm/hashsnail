@@ -1,2 +1,8 @@
 hashsnail
 hashsnail.code-workspace
+combinator.test
+cpu.out
+cpu.prof
+hash.test
+mem.prof
+trace.out
