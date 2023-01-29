@@ -36,32 +36,17 @@ var benchTable = []struct {
 	// {input: 200000000}, // takes too long
 }
 
-func printResult(name string, numCombs uint, startTime time.Time, stopTime time.Time) {
-	// print out how many combinations were generated and the
-	// rate of millions of comb's per second
-	elapsed := stopTime.Sub(startTime)
-	rate := float64(numCombs) / elapsed.Seconds()
-	fmt.Printf("[%v] numCombs: %v, elapsed %v, rate:%.1fM/s\n",
-		name, numCombs, elapsed, rate/1000000)
-}
 
 func BenchmarkCombinator(b *testing.B) {
 	// benchmark for the main character combination method
 	for _, v := range benchTable {
 		b.Run(fmt.Sprintf("combinator_%d", v.input), func(b *testing.B) {
-			numCombs := v.input
-			state := NewState(CharSetDefault, 0)
-			startTime := time.Now()
-			for i := 0; i < numCombs; i++ {
-				state.Next()
-			}
-			stopTime := time.Now()
-			printResult(b.Name(), state.NumGenerated, startTime, stopTime)
+			DemoCombinator(v.input, b.Name())
 		})
 	}
 }
 
-func BenchmarkCombinator2(b *testing.B) {
+func Benchmark2Combinator(b *testing.B) {
 	// benchmark experimental new methods for combinator
 	charSet := strings.Split(CharSetDefault, "") // set := []string{"a", "b", "c"}
 	numChars := len(charSet)
@@ -79,7 +64,7 @@ func BenchmarkCombinator2(b *testing.B) {
 		}
 	}
 	stopTime := time.Now()
-	printResult(b.Name(), uint(numCombs), startTime, stopTime)
+	PrintResult(b.Name(), uint(numCombs), startTime, stopTime)
 }
 
 func iterate(n int) {
@@ -92,11 +77,7 @@ func iterate(n int) {
 func BenchmarkRawIterator(b *testing.B) {
 	for _, v := range benchTable {
 		b.Run(fmt.Sprintf("raw_iterator_%d", v.input), func(b *testing.B) {
-			numCombs := v.input
-			startTime := time.Now()
-			iterate(numCombs)
-			stopTime := time.Now()
-			printResult(b.Name(), uint(numCombs), startTime, stopTime)
+			DemoIterate(v.input, b.Name())
 		})
 	}
 

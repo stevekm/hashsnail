@@ -2,9 +2,10 @@ package combinator
 
 import (
 	// "log"
+	"fmt"
 	"sort"
 	"strings"
-	// "time"
+	"time"
 )
 
 const CharSetDefault = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
@@ -82,4 +83,44 @@ func uniqueStrs(strSlice []string) []string {
 		}
 	}
 	return list
+}
+
+
+
+
+
+
+func PrintResult(name string, numCombs uint, startTime time.Time, stopTime time.Time) {
+	// print out how many combinations were generated and the
+	// rate of millions of comb's per second
+	elapsed := stopTime.Sub(startTime)
+	rate := float64(numCombs) / elapsed.Seconds()
+	fmt.Printf("[%v] numCombs: %v, elapsed %v, rate:%.1fM/s\n",
+		name, numCombs, elapsed, rate/1000000)
+}
+
+func DemoCombinator(numCombs int, name string) {
+	state := NewState(CharSetDefault, 0)
+	startTime := time.Now()
+	var result string
+	for i := 0; i < numCombs; i++ {
+		result = state.Next()
+	}
+	stopTime := time.Now()
+	result = ""
+	PrintResult(name + result, state.NumGenerated, startTime, stopTime)
+}
+
+
+func DemoIterate(numCombs int, name string) {
+	// raw iterator to see how fast we can increment an iterator
+	// with no other operations going on
+	startTime := time.Now()
+	var result int
+	for i := 0; i < numCombs; i++ {
+		result++
+		// continue
+	}
+	stopTime := time.Now()
+	PrintResult(name, uint(numCombs), startTime, stopTime)
 }
