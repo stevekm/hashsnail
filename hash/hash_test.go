@@ -97,7 +97,7 @@ func TestRunHash(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, _ := tc.finder.FindParallel()
+			got, _ := tc.finder.FindParallel2()
 			if diff := cmp.Diff(tc.want, got); diff != "" {
 				t.Errorf("got vs want mismatch (-want +got):\n%s", diff)
 			}

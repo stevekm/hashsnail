@@ -6,9 +6,9 @@ import (
 	"hashsnail/combinator"
 	_hash "hashsnail/hash"
 	"log"
+	"os"
 	"runtime"
 	"runtime/pprof"
-	"os"
 )
 
 // https://pkg.go.dev/runtime/pprof
@@ -38,7 +38,6 @@ func StartProfiler() (*os.File, *os.File) {
 	// defer WriteMemoryProfile(memFile)
 	log.Printf("memFile: %v\n", memFileName)
 
-
 	return cpuFile, memFile
 }
 func WriteMemoryProfile(memFile *os.File) {
@@ -47,7 +46,6 @@ func WriteMemoryProfile(memFile *os.File) {
 		log.Fatal("could not write memory profile: ", err)
 	}
 }
-
 
 type CLI struct {
 	Hash     string  `help:"hash string to crack" arg:""` // required positional arg
@@ -96,10 +94,9 @@ func run(
 		defer pprof.StopCPUProfile()
 		defer WriteMemoryProfile(memFile)
 
-
 		// put some function calls here for when I am debugging things and need
 		// an easier CLI entrypoint
-		combinator.DemoCombinator(100000000, "debug")
+		// combinator.DemoCombinator(100000000, "debug")
 		// combinator.DemoIterate(10000000000, "debug")
 		return nil
 	}
@@ -120,7 +117,7 @@ func run(
 
 	finder := _hash.NewHashFinder(numCombs, maxSize, minSize, charSet, wanted, print, numThreads)
 	log.Printf("Starting finder:%v\n", finder.DescribeStart())
-	_, err := finder.FindParallel() // result, err
+	_, err := finder.FindParallel2() // result, err
 	if err != nil {
 		log.Fatalf("%v", err)
 		return err
