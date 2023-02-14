@@ -14,6 +14,8 @@ type State struct {
 	indexes      []int    // keeps track of which characters should be returned
 	Chars        []string // character set to build combinations from
 	NumGenerated uint     // number of combinations generated
+	IterStart    int      // starting value for iteration
+	IterStep     int      // step size for iteration
 }
 
 func (s *State) Get() string {
@@ -53,22 +55,33 @@ func (s *State) carry() {
 func (s *State) Next() string {
 	// get the next combination then increment the indexes
 	result := s.Get()
-	s.increment()
+	for i := 0; i < s.IterStep; i++ {
+		s.increment()
+	}
 	s.NumGenerated++
 	return result
 }
 
-func NewState(charSet string, minSize int) State {
+func NewState(charSet string, minSize int, iterStart int, iterStep int) State {
 	// return a new blank state
+	// clean up the input character set
 	chars := strings.Split(charSet, "")
 	chars = uniqueStrs(chars)
 	sort.Strings(chars)
+	// initialize a new State object
 	state := State{
-		Chars:   chars,
-		indexes: []int{0},
+		Chars:     chars,
+		indexes:   []int{0},
+		IterStart: iterStart,
+		IterStep:  iterStep,
 	}
+	// update the indexes to the minimum requested combination length
 	for len(state.indexes) < minSize {
 		state.indexes = append(state.indexes, 0)
+	}
+	// increment the iterator to the requested starting position
+	for i := 0; i < iterStart; i++ {
+		state.increment()
 	}
 	return state
 }
@@ -85,11 +98,6 @@ func uniqueStrs(strSlice []string) []string {
 	return list
 }
 
-
-
-
-
-
 func PrintResult(name string, numCombs uint, startTime time.Time, stopTime time.Time) {
 	// print out how many combinations were generated and the
 	// rate of millions of comb's per second
@@ -100,7 +108,7 @@ func PrintResult(name string, numCombs uint, startTime time.Time, stopTime time.
 }
 
 func DemoCombinator(numCombs int, name string) {
-	state := NewState(CharSetDefault, 0)
+	state := NewState(CharSetDefault, 0, 0, 1)
 	startTime := time.Now()
 	var result string
 	for i := 0; i < numCombs; i++ {
@@ -108,9 +116,8 @@ func DemoCombinator(numCombs int, name string) {
 	}
 	stopTime := time.Now()
 	result = ""
-	PrintResult(name + result, state.NumGenerated, startTime, stopTime)
+	PrintResult(name+result, state.NumGenerated, startTime, stopTime)
 }
-
 
 func DemoIterate(numCombs int, name string) {
 	// raw iterator to see how fast we can increment an iterator

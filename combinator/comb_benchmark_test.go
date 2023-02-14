@@ -36,7 +36,6 @@ var benchTable = []struct {
 	// {input: 200000000}, // takes too long
 }
 
-
 func BenchmarkCombinator(b *testing.B) {
 	// benchmark for the main character combination method
 	for _, v := range benchTable {
